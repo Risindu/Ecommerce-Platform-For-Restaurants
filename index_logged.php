@@ -1,3 +1,92 @@
+<?php
+session_start();
+
+// Check if the username is set in the session
+if (!isset($_SESSION['username'])) {
+    // Redirect to the login page if the username is not set
+    header("Location: login.php");
+    exit();
+}
+
+$servername = "localhost";
+$username = "root";
+$password = "";
+$database = "srilankan_delights";
+
+$conn = new mysqli($servername, $username, $password, $database);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch data from the cart table for the logged-in user
+$userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
+$sql = "SELECT COUNT(*) AS cart_count FROM cart WHERE user_id = $userId";
+$result = $conn->query($sql);
+
+$cartCount = 0;
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $cartCount = $row['cart_count'];
+}
+
+
+// Handle the form submission for order
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["order"])) {
+    // Get the form data
+    $item_id = $_POST['item_id'];
+    $item_name = $_POST['item_name'];
+    $unit_price = $_POST['unit_price'];
+    $quantity = $_POST['quantity'];
+    $total_price = $unit_price * $quantity;
+
+    // Fetch user_id based on the username from the user table
+    $username = $_SESSION['username'];
+    $userQuery = "SELECT user_id FROM user WHERE first_name = '{$_SESSION['username']}'";
+    $userResult = $conn->query($userQuery);
+
+    if ($userResult->num_rows > 0) {
+        $userData = $userResult->fetch_assoc();
+        $user_id = $userData['user_id'];
+
+        // Insert data into the cart table
+        $insertQuery = "INSERT INTO cart (user_id, item_id, item_name, quantity, price) VALUES ('$user_id', '$item_id', '$item_name', '$quantity', '$unit_price')";
+
+        if ($conn->query($insertQuery) === TRUE) {
+            header("location: index_logged.php");
+        } else {
+            echo '<p>Error adding item to the cart: ' . $conn->error . '</p>';
+        }
+    } else {
+        echo '<p>Error fetching user data.</p>';
+    }
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["book_table"])) {
+
+        // Insert data into a table named "reservation"
+        $tableName = "reservation";
+
+        // Retrieve values from the form using $_POST
+        $name = $_POST['name'];
+        $email = $_POST['email'];
+        $phone_number = $_POST['phone'];
+        $date = $_POST['date'];
+        $time = $_POST['time'];
+        $numberOfGuests = $_POST['guests'];
+
+        $sql = "INSERT INTO $tableName (name, email, phone_number, number_of_guests, date_of_reservation, time_of_reservation)
+                VALUES ('$name', '$email', '$phone_number', '$numberOfGuests', '$date', '$time')";
+
+        if ($conn->query($sql) === TRUE) {
+            echo "We have successfully reserved your table!";
+        } else {
+            echo "Error inserting data: " . $conn->error;
+        }
+}    
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,8 +109,8 @@
     <ul>
       <li><a href="#home">Home</a></li>
       <li><a href="#about">About</a></li>
-      <li><a href="login.php">Login</a></li>
-      <li><a href="cart.php"><i class="fas fa-shopping-cart"></i></a></li>
+      <li><a href="logout.php">Logout</a></li>
+      <?php echo "<p><a href='cart.php'>" . $_SESSION['username'] . "'s Cart <i class='fas fa-shopping-cart'></i> ($cartCount)</a></p>"; ?>
     </ul>
   </nav>
 
@@ -66,13 +155,13 @@
             echo '<p>' . $row['item_description'] . '</p>';
             echo '<div class="item-details">';
             echo '<span class="price">Rs. ' . $row['price'] . '.00</span>';
-            echo '<form method="post" action="login.php">';  // Added the action attribute
+            echo '<form method="post" action="">';  // Added the action attribute
             echo '<input type="hidden" name="item_id" value="' . $row['item_id'] . '">';
             echo '<input type="hidden" name="item_name" value="' . $row['item_name'] . '">';
             echo '<input type="hidden" name="unit_price" value="' . $row['price'] . '">';
-            echo '<button type="submit" class="order-button" name = "order">Order Now</button>';
+            echo '<button type="submit" class="order-button" name="order">Order Now</button>';
             echo '<label for="quantity-' . $row['item_id'] . '" class="Quantity">Quantity:</label>';
-            echo '<input type="number" id="quantity-1' . $row['item_id'] . '" name="quantity' . $row['item_id'] . '" value="1" min="1">';
+            echo '<input type="number" id="quantity-1" name = "quantity"'.'" value="1" min="1">';
             echo '</form>';
             echo '</div>';
             echo '</div>';

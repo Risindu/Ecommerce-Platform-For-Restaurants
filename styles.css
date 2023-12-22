@@ -118,7 +118,7 @@ body, h1, h2, h3, p, ul, li, figure {
   .menu-item {
     background-color: #55555587;
     padding: 20px;
-    width: 380px;
+    width: 400px;
     margin-bottom: 40px;
     margin-left: 40px;
     color: white;
@@ -126,6 +126,8 @@ body, h1, h2, h3, p, ul, li, figure {
     transform: translateY(20px);
     transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
   }
+
+  
 
   
 .menu-item:hover {
@@ -138,9 +140,11 @@ body, h1, h2, h3, p, ul, li, figure {
 }
   
   .menu-item img {
-    width: 100%;
+    width: 350px;
+    height: 250px;
     border-radius: 8px;
     margin-bottom: 10px;
+
   }
   
   
@@ -181,8 +185,12 @@ body, h1, h2, h3, p, ul, li, figure {
   }
   
   input[type="number"] {
+    background-color:#55555500;
+    color: white;
+    border: solid white;
     width: 50px;
-    padding: 8px;
+    padding: 10px;
+    margin-left: 5px;
     text-align: center;
     font-size: 16px;
     margin-right: 10px;
