@@ -46,3 +46,8 @@ Welcome to the Sri Lankan Delights Restaurant website! This web application show
 
    ```bash
    git clone https://github.com/risindu/sri-lankan-delights.git
+
+## License
+
+This project is licensed under the [Apache License 2.0](LICENSE).
+   
