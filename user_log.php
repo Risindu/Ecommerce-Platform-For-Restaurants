@@ -18,34 +18,40 @@ session_start();
 // Search for data in a table named "user"
 $tableName = "user";
 
-// Use mysqli_real_escape_string to prevent SQL injection
-$searchTerm_1 = mysqli_real_escape_string($conn, $_POST['username']);
-$searchTerm_2 = mysqli_real_escape_string($conn, $_POST['password']);
+// Use prepared statements to prevent SQL injection
+$searchTerm_1 = $_POST['username'];
 
-$sql = "SELECT * FROM $tableName WHERE first_name = '$searchTerm_1' AND password = '$searchTerm_2'";
+// Fetch hashed password from the database
+$stmt = $conn->prepare("SELECT user_id, password FROM $tableName WHERE first_name = ?");
+$stmt->bind_param("s", $searchTerm_1);
+$stmt->execute();
+$stmt->store_result();
 
-$result = $conn->query($sql);
+if ($stmt->num_rows > 0) {
+    // Bind the result variables
+    $stmt->bind_result($user_id, $hashedPassword);
+    $stmt->fetch();
 
-if ($result->num_rows > 0) {
-    // Authentication successful
-    // Fetch user_id from the database
-    $row = $result->fetch_assoc();
-    $user_id = $row['user_id'];
+    // Verify the password
+    if (password_verify($_POST['password'], $hashedPassword)) {
+        // Authentication successful
+        // Store the username and user_id in the session
+        $_SESSION['username'] = $searchTerm_1;
+        $_SESSION['user_id'] = $user_id;
 
-    // Store the username and user_id in the session
-    $_SESSION['username'] = $searchTerm_1;
-    $_SESSION['user_id'] = $user_id;
+        // Close statement and connection
+        $stmt->close();
+        $conn->close();
 
-    // Close connection
-    $conn->close();
-
-    // Redirect to the desired page
-    header("Location: index_logged.php");
-    exit();
-} else {
-    echo "Login failed. Please check your username and password.";
+        // Redirect to the desired page
+        header("Location: index_logged.php");
+        exit();
+    }
 }
 
-// Close connection
+// Close statement and connection
+$stmt->close();
 $conn->close();
+
+echo "Login failed. Please check your username and password.";
 ?>

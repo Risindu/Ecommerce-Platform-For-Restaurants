@@ -16,8 +16,13 @@ if ($conn->connect_error) {
 $tableName = "user";
 
 // Use prepared statements to prevent SQL injection
+$passwordToHash = $_POST['password'];
+
+// Hash the password using Argon2 and the default options
+$hashedPassword = password_hash($passwordToHash, PASSWORD_ARGON2I);
+
 $stmt = $conn->prepare("INSERT INTO $tableName (first_name, last_name, address, email, phone_number, password) VALUES (?, ?, ?, ?, ?, ?)");
-$stmt->bind_param("ssssss", $_POST['firstname'], $_POST['lastname'], $_POST['address'], $_POST['email'], $_POST['phone_number'], $_POST['password']);
+$stmt->bind_param("ssssss", $_POST['firstname'], $_POST['lastname'], $_POST['address'], $_POST['email'], $_POST['phone_number'], $hashedPassword);
 
 if ($stmt->execute()) {
     // Redirect to login.php
