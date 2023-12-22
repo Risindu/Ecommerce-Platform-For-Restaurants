@@ -1,0 +1,390 @@
+/* Reset some default styles */
+body, h1, h2, h3, p, ul, li, figure {
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    background-color: black;
+  }
+  
+  /* Navigation Bar Styles */
+  nav {
+    background-color: rgba(0, 0, 0, 0.671); /* Yellow background with transparency */
+    color: #f1f1f1;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  nav ul {
+    list-style-type: none;
+    display: flex;
+  }
+  
+  nav ul li {
+    margin-right: 50px;
+  }
+  
+  nav a {
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 20px;
+    transition: color 0.3s ease-in-out;
+  }
+  
+  nav a:hover {
+    color: #ffcc00;
+  }
+  
+  /* Hero Section Styles */
+  #home {
+    position: relative;
+    width: 100%;
+    height: 700px;
+    color: #fff;
+    text-align: center;
+    padding: 100px 20px;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('images/hero-background.jpg') center/cover no-repeat;
+  }
+  
+  .hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding-top: 12%;
+    font-size: 30px;
+    opacity: 0; /* Initial opacity set to 0 */
+    transform: translateY(20px); /* Initial vertical offset */
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+  }
+  
+  #home.animate .hero-content {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  button {
+    background-color: #e84600;
+    color: #ffffff;
+    padding: 12px 24px;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  button:hover {
+    background-color: #f77f35;
+  }
+  
+  /* Keyframes Animation */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Menu Section Styles */
+  #menu {
+    padding: 50px 30px;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+  }
+  
+  #menu.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  #menu-sub {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+
+  .menu-item {
+    background-color: #55555587;
+    padding: 20px;
+    width: 380px;
+    margin-bottom: 40px;
+    margin-left: 40px;
+    color: white;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+  }
+
+  
+.menu-item:hover {
+  transform: translateY(0) scale(1.05);
+}
+
+.menu-item.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+  
+  .menu-item img {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  
+  
+  .menu-item h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .menu-item p {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 10px;
+  }
+  
+  .item-details {
+    display: flex;
+    align-items: center;
+  }
+  
+  .price {
+    font-size: 18px;
+    margin-right: 20px;
+    color: #e84600;
+  }
+  
+  .order-button {
+    background-color: #e84600;
+    color: #fff;
+    padding: 8px 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  .order-button:hover {
+    background-color: #f77f35;
+  }
+  
+  input[type="number"] {
+    width: 50px;
+    padding: 8px;
+    text-align: center;
+    font-size: 16px;
+    margin-right: 10px;
+  }
+  
+  .Quantity{
+    padding-left: 20px;
+  }
+
+  #quantity-1{
+    background-color:#55555500;
+    color: white;
+    margin-left: 10px;
+    border: solid white;
+  }
+
+  #quantity-2{
+    background-color:#55555500;
+    color: white;
+    margin-left: 10px;
+    border: solid white;
+  }
+
+  
+ /* Reserve Table Section Styles */
+#reserve-table2{
+    background-color: rgba(220, 220, 220, 0);
+    padding: 50px 20px;
+    opacity: 1; /* Initial opacity set to 0 */
+    transform: translateY(20px); /* Initial vertical offset */
+    transition: opacity 1s ease-in-out, transform 0.5s ease-in-out;
+  }
+  
+  #reserve-table.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .reserve-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap; /* Allow content to wrap on smaller screens */
+  }
+  
+  .reserve-form {
+    flex: 1;
+    max-width: 500px;
+    text-align: center; /* Center text within the form */
+    animation: fadeIn 1.5s ease-in-out;
+  }
+  
+  .reserve-form form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .reserve-form label {
+    margin-bottom: 8px;
+    font-family: 'Dosis', sans-serif;
+    font-size: 30px; /* Corrected property */
+  }
+  
+  .reserve-form input,
+  .reserve-form select,
+  .reserve-form button {
+    margin-bottom: 16px;
+    padding: 12px;
+    transition: transform 0.3s ease-in-out, border 0.3s ease-in-out; /* Add transition for both transform and border */
+    border: 2px solid transparent; /* Add a transparent border by default */
+  }
+  
+  .reserve-form input:focus,
+  .reserve-form select:focus,
+  .reserve-form button:focus {
+    border: 2px solid #e84600; /* Change the border color on focus */
+    outline: none; /* Remove the default focus outline */
+    transform: scale(1.05); /* Add a slight scale effect on focus */
+  }
+
+  /* Keyframes Animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+ /* About Restaurant Section Styles */
+#about {
+  text-align: center;
+  animation: fadeIn 2s ease-in-out;
+  padding: 50px 20px; /* Adjusted padding for better spacing */
+  color: white;
+}
+
+.about-content {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap; /* Allow content to wrap on smaller screens */
+}
+
+.about-text,
+.about-details {
+  flex: 1;
+  text-align: left;
+}
+
+.about-details ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.about-details li {
+  margin-bottom: 10px;
+}
+
+.about-details i {
+  margin-right: 10px;
+}
+  /* Footer Section Styles */
+  footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 20px;
+    text-align: center;
+    animation: slideInUp 1.5s ease-in-out;
+  }
+  
+  .social-icons a {
+    color: #fff;
+    font-size: 24px;
+    margin-right: 10px;
+    transition: color 0.3s ease-in-out;
+  }
+  
+  .social-icons a:hover {
+    color: #ffcc00;
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 768px) {
+    nav ul {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    nav ul li {
+      margin-bottom: 10px;
+    }
+  
+    #home {
+      padding: 80px 20px;
+    }
+  
+    .hero-content {
+      padding: 0 20px;
+    }
+  }
+
+  
+  footer {
+    background-color: #333;
+    color: #fff;
+    padding: 40px 20px; /* Increased padding for better spacing */
+    text-align: center;
+    animation: slideInUp 1.5s ease-in-out;
+  }
+  
+  .footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .footer-logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .footer-text {
+    margin-bottom: 20px;
+  }
+  
+  .social-icons {
+    margin-top: 20px;
+  }
+  
+  .social-icons a {
+    color: #fff;
+    font-size: 24px;
+    margin: 0 10px;
+    transition: color 0.3s ease-in-out;
+  }
+  
+  .social-icons a:hover {
+    color: #ffcc00;
+  }
