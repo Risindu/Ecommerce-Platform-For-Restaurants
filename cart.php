@@ -96,81 +96,89 @@ $result = $conn->query($sql);
 
         <div class="cart-summary">
             <h2>Order Summary</h2>
-            <?php
-            // Re-establish the database connection
-            $conn = new mysqli($servername, $username, $password, $database);
+      <?php
+// Re-establish the database connection
+$servername = "localhost";
+$username = "root";
+$password = "";
+$database = "srilankan_delights";
+$conn = new mysqli($servername, $username, $password, $database);
 
-            if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
-            }
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 
-            // Fetch data from the cart table for the logged-in user
-            $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
-            $sql = "SELECT SUM(quantity * price) AS total, GROUP_CONCAT(cart_id) AS cart_ids FROM cart WHERE user_id = $userId";
-            $result = $conn->query($sql);
+// Fetch data from the cart table for the logged-in user
+$userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
+$sql = "SELECT SUM(quantity * price) AS total, GROUP_CONCAT(cart_id) AS cart_ids FROM cart WHERE user_id = $userId";
+$result = $conn->query($sql);
 
-            if ($result->num_rows > 0) {
-                $row = $result->fetch_assoc();
-                $totalAmount = $row['total'];
-                $cartIds = $row['cart_ids'];
-                echo '<p>Total Payable Amount: Rs. ' . $totalAmount . '</p>';
-            } else {
-                echo '<p>No items in the cart.</p>';
-            }
-            ?>
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $totalAmount = $row['total'];
+    $cartIds = $row['cart_ids'];
+    echo '<p>Total Payable Amount: Rs. ' . $totalAmount . '</p>';
+} else {
+    echo '<p>No items in the cart.</p>';
+}
 
-            <form method="post" action="">
-                <label for="payment">Select Payment Method:</label>
-                <select name="payment" id="payment">
-                    <option value="cash">Cash</option>
-                    <option value="card">Card</option>
-                </select>
-                <button type="submit" name="submitPayment" class = "back-button">Confirm Payment</button>
-                <a href="index_logged.php"><button type="button" class="back-button">Back To Home</button></a>
-                
-                
-            </form>
+// Handle payment submission
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submitPayment"])) {
+    $selectedPaymentMethod = $_POST['payment'];
 
-            <?php
-            // Handle payment submission
-            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submitPayment"])) {
-                $selectedPaymentMethod = $_POST['payment'];
+    // If the payment method is "card," redirect to payment.php
+    if ($selectedPaymentMethod === "card") {
+        header("Location: payment.php?totalAmount=$totalAmount");
+        exit();
+    }
 
-                // Insert payment data into the payment table using prepared statement
-                $insertPaymentQuery = "INSERT INTO payment (user_id, cart_id, total_payment, payment_type) 
-                                       VALUES (?, ?, ?, ?)";
-                $stmt = $conn->prepare($insertPaymentQuery);
-                $stmt->bind_param("ssss", $userId, $cartIds, $totalAmount, $selectedPaymentMethod);
+    // Insert payment data into the payment table using prepared statement
+    $insertPaymentQuery = "INSERT INTO payment (user_id, cart_id, total_payment, payment_type) 
+                        VALUES (?, ?, ?, ?)";
+    $stmt = $conn->prepare($insertPaymentQuery);
+    $stmt->bind_param("ssss", $userId, $cartIds, $totalAmount, $selectedPaymentMethod);
 
-                if ($stmt->execute()) {
-                    echo '<p>Payment successful!</p>';
+    if ($stmt->execute()) {
+        echo '<p>Payment successful!</p>';
 
-                    // Delete existing cart items using prepared statement
-                    $deleteCartItemsQuery = "DELETE FROM cart WHERE user_id = ?";
-                    $deleteStmt = $conn->prepare($deleteCartItemsQuery);
-                    $deleteStmt->bind_param("s", $userId);
+        // Delete existing cart items using prepared statement
+        $deleteCartItemsQuery = "DELETE FROM cart WHERE user_id = ?";
+        $deleteStmt = $conn->prepare($deleteCartItemsQuery);
+        $deleteStmt->bind_param("s", $userId);
 
-                    if ($deleteStmt->execute()) {
-                        echo '<p>Cart items deleted successfully.</p>';
-                    } else {
-                        echo '<p>Error deleting cart items: ' . $conn->error . '</p>';
-                    }
+        if ($deleteStmt->execute()) {
+            echo '<p>Cart items deleted successfully.</p>';
+        } else {
+            echo '<p>Error deleting cart items: ' . $conn->error . '</p>';
+        }
 
-                    // Redirect to order.php
-                    header("Location: cart.php");
-                    exit();
-                } else {
-                    echo '<p>Error inserting payment data: ' . $conn->error . '</p>';
-                }
+        // Redirect to order.php or any other page if needed
+        header("Location: cart.php");
+        exit();
+    } else {
+        echo '<p>Error inserting payment data: ' . $conn->error . '</p>';
+    }
 
-                // Close the statement
-                $stmt->close();
-                $deleteStmt->close();
-            }
+    // Close the statement
+    $stmt->close();
+    $deleteStmt->close();
+}
 
-            // Close the connection after the payment query
-            $conn->close();
-            ?>
+// Close the connection after the payment query
+$conn->close();
+?>
+
+<form method="post" action="">
+    <label for="payment">Select Payment Method:</label>
+    <select name="payment" id="payment">
+        <option value="cash">Cash</option>
+        <option value="card">Card</option>
+    </select>
+    <button type="submit" name="submitPayment" class="back-button">Confirm Payment</button>
+    <a href="index_logged.php"><button type="button" class="back-button">Back To Home</button></a>
+</form>
+
+            
         </div>
     </div>
 </body>
